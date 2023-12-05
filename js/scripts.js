@@ -129,8 +129,8 @@ function leerDatos(prenda) {
   console.log(infoprenda.talla);
   //validando si la prenda existe
   const existe = articulosPrenda.some(prenda => prenda.id === infoprenda.id); // el some es una operacion que se hace en el vector para encontrar algun elemento parecido
-  if (existe) {
-    //modificacamos la cantidad
+  if (existe  ) {
+    //modificacamos la cantidad && infoprenda.talla !== infoprenda.talla
     const cantidadPrenda = articulosPrenda.map(prenda => { // el map recorre el vector es como un for pero mas sofisticado
       if (prenda.id === infoprenda.id) {
         prenda.cantidad++;
