@@ -96,7 +96,7 @@ function agregarCarrito(e) {
   if (e.target.classList.contains('add')) { //busca la clase add 
     //console.log(e.target.classList);
     const prendaSeleccionada = e.target.parentElement.parentElement.parentElement; // localiza cada elemento que hace parte del producto
-    console.log(e.target.parentElement.parentElement.parentElement);
+    //console.log(e.target.parentElement.parentElement.parentElement);
     leerDatos(prendaSeleccionada);
     //mensaje que se muestra al agregar la prenda
     Swal.fire(
@@ -110,7 +110,7 @@ function agregarCarrito(e) {
 
 //funcion para leer los datos de la prenda seleccionada
 function leerDatos(prenda) {
-  console.log(prenda)
+  //console.log(prenda)
   const sizes = prenda.querySelector("ul.tallas")
   let size = "talla única"
   if (sizes) {
@@ -162,7 +162,7 @@ function mostrarDatos() {
         </td>
         <td>
           ${talla}
-        </td>
+        </td> 
         <td>
          $ ${precioTotal}
         </td>
@@ -174,14 +174,27 @@ function mostrarDatos() {
           </div>
         </td>
         <td>
-          <a href="#" data-id="${id}"> <i class="bi bi-x-circle-fill borrar-prenda" ></i> </a>
+          <a href="#" data-id="${id}"> <i class="bi bi-x-circle-fill borrar-prenda2" ></i> </a>
         </td>`;
     contenedorCarrito.appendChild(row); // agrega todos los datos de la prenda en la tabla
     // Calcular el precio total
     precioTotalCarrito = articulosPrenda.reduce((total, prenda) => total + (prenda.precio * prenda.cantidad), 0);
 
+    // Calcular la cantidad total de prendas
+    let cantidadTotalPrendas = articulosPrenda.reduce((total, prenda) => total + prenda.cantidad, 0);
+
+    // Calcular el descuento
+    let descuento = Math.floor(cantidadTotalPrendas / 10) * 5;
+    if (descuento > 40) {
+      descuento = 40;
+    }
+
+    // Aplicar el descuento
+    precioTotalCarrito = precioTotalCarrito * ((100 - descuento) / 100);
+
     // Mostrar el precio total
     precioTotalElement.textContent = `$ ${precioTotalCarrito.toFixed(2)}`;
+
 
     // Actualizar el número en el span o el numero que esta en el carrito
     const cantidadCarritoSpan = document.getElementById('cantidadCarrito');
@@ -200,11 +213,16 @@ function limpiar() {
 //funcion para eliminar la prenda seleccionada
 function eliminarPrenda(e) {
   e.preventDefault();
-  if (e.target.classList.contains('borrar-prenda')) {
+  const prendaId = e.target.parentElement.getAttribute('data-id');
+  const existe2 = articulosPrenda.some(prenda => prenda.id === prendaId);
+  if (e.target.classList.contains('borrar-prenda2')) {
+
     //console.log(e.target.classList);
     //obtenemos el id que deseamos eliminar
-    const prendaId = e.target.parentElement.getAttribute('data-id');
-    const existe2 = articulosPrenda.some(prenda => prenda.id === prendaId);
+    articulosPrenda = articulosPrenda.filter(prenda => prenda.id !== prendaId);
+  }
+  else if (e.target.classList.contains('borrar-prenda')) {
+
     if (existe2) {
       articulosPrenda.some(prenda => {
         if (prenda.id === prendaId) {
@@ -236,6 +254,13 @@ function eliminarPrenda(e) {
       articulosPrenda = [...articulosPrenda, prendaId];
     }
   }
+  function openFloatWindow() {
+    document.getElementById("float-window").style.display = "block";
+  }
 
+  function closeFloatWindow() {
+
+    document.getElementById("float-window").style.display = "none";
+  }
   mostrarDatos();
 }
