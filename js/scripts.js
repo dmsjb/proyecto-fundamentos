@@ -12,10 +12,10 @@ let articulosPrenda = [];
 //carga cuando la paginicia
 cargarEvenetListener();
 function cargarEvenetListener() {
-  //agregar el prenda al carrito
+  //agregar el curso al carrito
   listaPrenda.addEventListener('click', agregarCarrito);
 
-  //eliminar prenda del carritoHTML
+  //eliminar curso del carritoHTML
   carrito.addEventListener('click', eliminarPrenda);
 
   //confirmar compra
@@ -38,7 +38,7 @@ function cargarEvenetListener() {
           'success'
         );
         articulosPrenda = [],
-        limpiar();
+          limpiar();
         precioTotalElement.textContent = `$0.00`;
       } else if (
         /* Read more about handling dismissals below */
@@ -96,7 +96,7 @@ function agregarCarrito(e) {
   if (e.target.classList.contains('add')) { //busca la clase add 
     //console.log(e.target.classList);
     const prendaSeleccionada = e.target.parentElement.parentElement.parentElement; // localiza cada elemento que hace parte del producto
-    //console.log(e.target.parentElement.parentElement.parentElement);
+    console.log(e.target.parentElement.parentElement.parentElement);
     leerDatos(prendaSeleccionada);
     //mensaje que se muestra al agregar la prenda
     Swal.fire(
@@ -110,15 +110,23 @@ function agregarCarrito(e) {
 
 //funcion para leer los datos de la prenda seleccionada
 function leerDatos(prenda) {
+  console.log(prenda)
+  const sizes = prenda.querySelector("ul.tallas")
+  let size = "talla única"
+  if (sizes) {
+    size = sizes.querySelector("button.active").textContent
+  }
+  console.log("size:", size)
   const infoprenda = {
     id: prenda.querySelector('a').getAttribute('data-id'),
     img: prenda.querySelector('img').src,
     //talla: prenda.querySelector('id').textContent,
+    talla: size,
     nombre: prenda.querySelector('h5').textContent,
     precio: parseFloat(prenda.querySelector('.precio').textContent.replace('$', '')),
     cantidad: 1,
   }
-  //console.log(infoprenda.talla);
+  console.log(infoprenda.talla);
   //validando si la prenda existe
   const existe = articulosPrenda.some(prenda => prenda.id === infoprenda.id); // el some es una operacion que se hace en el vector para encontrar algun elemento parecido
   if (existe) {
@@ -142,7 +150,7 @@ function mostrarDatos() {
   //Limpiamos el contenido de la tabla
   limpiar();
   articulosPrenda.map(prenda => {
-    const { img, nombre, precio, cantidad, id,talla } = prenda;
+    const { img, nombre, precio, cantidad, id, talla } = prenda;
     const precioTotal = (precio * cantidad);
     const row = document.createElement('tr'); //crea un elemento html con javascript, el codigo siguiente agrega las columnas y filas de una tabla con javascript
     row.innerHTML = `
@@ -209,8 +217,8 @@ function eliminarPrenda(e) {
       });
     }
     precioTotalElement.textContent = `$0.00`;
-    
-  }else if (e.target.classList.contains('agregar-prenda')) {
+
+  } else if (e.target.classList.contains('agregar-prenda')) {
     const prendaId = e.target.parentElement.getAttribute('data-id');
     const existe = articulosPrenda.some(prenda => prenda.id === prendaId);
     if (existe) {
